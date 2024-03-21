@@ -4,7 +4,7 @@ import requests
 def jobSearch(title):
     url = "https://jobs-api14.p.rapidapi.com/list"
 
-    querystring = {"query": title, "location": "United States", "distance": "1.0", "language": "en_GB",
+    querystring = {"query": title, "location": "India",
                    "remoteOnly": "false", "datePosted": "month",
                    "employmentTypes": "fulltime;parttime;intern;contractor", "index": "0"}
 
