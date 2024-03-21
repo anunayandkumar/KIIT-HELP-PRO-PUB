@@ -3,6 +3,8 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import json
 import datetime
 import pytz
+
+import jobs
 import kiit
 import openaiprompt
 
@@ -17,6 +19,7 @@ def main():
         help_message = help_message + f"2. /help : Help Command. \n"
         help_message = help_message + f"3. /get_timetable: Access Personalized Time Table.\n"
         help_message = help_message + f"4. /chat : Enter Command followed by prompt to get any help . Ex : /chat Describe Bhubaneshwar. \n"
+        help_message = help_message + f"5. /job : Enter Command followed by Job Title . Ex: /job Web Developer. \n"
         await update.message.reply_text(help_message)
 
     async def get_timetable(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -29,17 +32,32 @@ def main():
         finalString = kiit.result(roll)
         await update.message.reply_text(finalString)
 
+    async def job(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        title = " ".join(context.args)
+        final =jobs.jobSearch(title)
+        finalString1 = final[0]
+        finalString2 = final[1]
+        finalString3 = final[2]
+        await update.message.reply_text(finalString1)
+        await update.message.reply_text(finalString2)
+        await update.message.reply_text(finalString3)
+
+
+
+
     async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         prompt = " ".join(context.args)
         generated_query = openaiprompt.generate_text(prompt)
         await update.message.reply_text(generated_query)
 
-    app = ApplicationBuilder().token("BOT TOKEN").build()
+    app = ApplicationBuilder().token("KEY").build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help))
     app.add_handler(CommandHandler("get_timetable", get_timetable))
     app.add_handler(CommandHandler("timetable", timetable))
     app.add_handler(CommandHandler("chat", chat))
+    app.add_handler(CommandHandler("job", job))
+
     app.run_polling()
 
 
